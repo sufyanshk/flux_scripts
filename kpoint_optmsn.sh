@@ -20,10 +20,10 @@ if [ -f summary1.csv ];then
 fi
 
 #Name of the system
-sys_name="V"
+sys_name="NbMo"
 
 #Define no. of cores
-n_cores=8
+n_cores=300
 
 #Precise lattice parameter, found out from earlier runs of VASP.
 i=2.9

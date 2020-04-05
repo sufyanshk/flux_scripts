@@ -3,8 +3,8 @@
 #PBS -q batch
 #PBS -N 2monb_001_222 
 #PBS -l nodes=node4:ppn=16
-#PBS -o evsvol_coarse.out
-#PBS -e evsvol_coarse.err
+#PBS -o evsvol_fine.out
+#PBS -e evsvol_fine.err
 
 cd $PBS_O_WORKDIR
 
@@ -20,13 +20,13 @@ if [ -f summary1.csv ];then
 fi
 
 #Define no. of cores
-n_cores=8
+n_cores=16
 
 #Name of the system
-sys_name="V"
+sys_name="NbMo"
 
 #Energy cut-off value (for structure relaxation take 1.3x the ENMAX of POTCAR)
-e_cutoff=295
+e_cutoff=300
 
 #Initial POSCAR, POTCAR and KPOINTS will be taken from the folder.
 #Later only the POSCAR will be changed.

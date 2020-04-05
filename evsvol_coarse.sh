@@ -20,35 +20,35 @@ if [ -f summary1.csv ];then
 fi
 
 #Define no. of cores
-n_cores=8
+n_cores=16
 
 #Name of the system
-sys_name="V"
+sys_name="NbMo"
 
 #Energy cut-off value (for structure relaxation take 1.3x the ENMAX of POTCAR)
-e_cutoff=250
+e_cutoff=300
 
 #INCAR file will be written here
 cat >INCAR <<!
-	SYSTEM = $sys_name
-	ISTART = 0
-	NPAR = 4
-	ALGO = FAST
-	ISPIN = 2 
-	NSIM = 4
-	ENCUT = $e_cutoff
-	IBRION = 2
-	NELM = 100
-	NELMIN = 3 
-	ISIF = 3
-	ISMEAR = 1
-	MAGMOM = 5 5 
-	SIGMA = 0.2
-	PREC = Accurate
-	LWAVE = .FALSE.
-	LREAL = AUTO
-	LCHARG = .FALSE.
-	LVTOT = .FALSE.
+	SYSTEM	= $sys_name
+	ISTART	= 0
+	NPAR	= 4
+	ALGO 	= FAST
+	ISPIN 	= 2 
+	NSIM 	= 4
+	ENCUT 	= $e_cutoff
+	IBRION 	= 2
+	NELM 	= 100
+	NELMIN 	= 3 
+	ISIF 	= 3
+	ISMEAR 	= 1
+	MAGMOM 	= 5 5 
+	SIGMA 	= 0.2
+	PREC 	= Accurate
+	LWAVE 	= .FALSE.
+	LREAL 	= AUTO
+	LCHARG 	= .FALSE.
+	LVTOT 	= .FALSE.
 !
 
 #Initial POSCAR, POTCAR and KPOINTS will be taken from the folder.
