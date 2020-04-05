@@ -1,11 +1,23 @@
 #Copyright (C) 2020 Sufyan M. Shaikh
 #!/bin/bash
+#PBS -q batch
+#PBS -N 2monb_001_222 
+#PBS -l nodes=node4:ppn=16
+#PBS -o evsvol_coarse.out
+#PBS -e evsvol_coarse.err
+
+cd $PBS_O_WORKDIR
 
 #THIS FILE SHOULD ONLY BE USED FOR OPTIMISING KPOINTS...
 #AFTER THE E vs V HAS BEEN OPTIMISED AND...
 #THE PRECISE LATTICE PARAMETER HAS BEEN FOUND OUT.
 
-rm summary3.csv summary_with_kp.csv
+if [ -f summary1.csv ];then
+        rm summary1.csv
+        if [ -f summary_EvsV_coarse.csv ]; then
+                rm summary_EvsV_coarse.csv
+        fi
+fi
 
 #Name of the system
 sys_name="V"
@@ -29,7 +41,7 @@ do
 	echo "a= $i K-points=$kp $kp $kp"
 	
 	#Energy will be calculated for every KPOINT
-	mpirun \-n $n_cores vasp_std > log 
+	/apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
 	
 	#Lattice parameter, K-points and energy will be written in the "summary3.csv" file
 	E=`awk '/F=/ {print $0}' OSZICAR` 

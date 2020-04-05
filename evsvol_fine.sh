@@ -1,11 +1,23 @@
 #Copyright (C) 2020 Sufyan M. Shaikh
 #!/bin/bash
+#PBS -q batch
+#PBS -N 2monb_001_222 
+#PBS -l nodes=node4:ppn=16
+#PBS -o evsvol_coarse.out
+#PBS -e evsvol_coarse.err
+
+cd $PBS_O_WORKDIR
 
 #THIS SCRIPT SHOULD BE USED FOR FINAL LATTICE PARAMETER CALCULATION ONLY
 #CHECK THE POSCAR FILE SECTION, VERIFY THAT THE EACH ELEMENT AND ITS RESPECTIVE
 #ATOMS ARE CORRECTLY DEFINED.
 
-rm summary2.csv summary_EvsV_fine.csv
+if [ -f summary1.csv ];then
+        rm summary1.csv
+        if [ -f summary_EvsV_coarse.csv ]; then
+                rm summary_EvsV_coarse.csv
+        fi
+fi
 
 #Define no. of cores
 n_cores=8
@@ -31,7 +43,7 @@ do
 	sed -i "1s/.*/$sys_name/" POSCAR
 	sed -i "2s/.*/$i/" POSCAR
 	echo "a= $i"
-	mpirun \-n $n_cores vasp_std > log 
+	/apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
 	
 	#This will write in to file summary2.csv file.
 	E=`awk '/F=/ {print $0}' OSZICAR` ; echo $i kp2 $E >> summary2.csv
