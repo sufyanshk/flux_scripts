@@ -1,6 +1,6 @@
 # VASP Flux structure relaxation
 VASP and Gnuplot should be installed prior to running these scripts\
-MPIRUN is used for parrallel runs of vasp_std
+MPIRUN is used for parrallel runs of `vasp_std`.
 
 These scripts are used to do strucutrual relaxations and get precise
 lattice parameter using Vienna Ab-initio Simulaiton Package (VASP) using bash and gnuplot scripts.
