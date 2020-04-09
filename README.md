@@ -1,6 +1,6 @@
 # VASP Flux structure relaxation
-(These files are under development for systems which uses load-leveller\/job-scheduler)\
-VASP and Gnuplot should be installed prior to running these scripts\
+(These files are under development for systems which uses load-leveller\/job-scheduler)
+VASP and Gnuplot should be installed prior to running these scripts.
 MPIRUN is used for parrallel runs of `vasp_std`.
 
 These scripts are used to do strucutrual relaxations and get precise
@@ -26,5 +26,5 @@ Steps:
 10. Check the `nohup.out` file for the output messages. (If `summary3.eps` file is generated then it means your calculations are over)
 
 # Disclaimer
-This program is not affiliated with VASP.\
+This program is not affiliated with VASP.
 You are free to modify it, but do so at your own risk.
