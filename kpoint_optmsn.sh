@@ -34,6 +34,7 @@ sed -i "2s/.*/$i/" POSCAR
 
 #KPOINTS will be changed and the respective energies will be calculated.
 #Put the range of K-point in which you want to get the energy values.
+touch "kp_over"
 for kp in $(seq 4 1 20)
 do
 	sed -i "4s/.*/$kp $kp $kp/" KPOINTS
@@ -54,5 +55,5 @@ awk '{print $1","$2","$5}' summary3.csv >> summary_with_kp.csv
 #Plots E vs. K-points for given precise lattice parameter
 gnuplot plot_kp.plt
 
-echo "$sys_name : K-point optimisation finished"
+echo "$sys_name : K-point optimisation finished" && touch "kp_over"
 printf "\n"

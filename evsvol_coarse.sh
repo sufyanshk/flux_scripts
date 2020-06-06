@@ -30,25 +30,25 @@ e_cutoff=300
 
 #INCAR file will be written here
 cat >INCAR <<!
-	SYSTEM	= $sys_name
-	ISTART	= 0
-	NPAR	= 4
-	ALGO 	= FAST
-	ISPIN 	= 2 
-	NSIM 	= 4
-	ENCUT 	= $e_cutoff
-	IBRION 	= 2
-	NELM 	= 100
-	NELMIN 	= 3 
-	ISIF 	= 3
-	ISMEAR 	= 1
-	MAGMOM 	= 5 5 
-	SIGMA 	= 0.2
-	PREC 	= Accurate
-	LWAVE 	= .FALSE.
-	LREAL 	= AUTO
-	LCHARG 	= .FALSE.
-	LVTOT 	= .FALSE.
+SYSTEM = $sys_name
+ISTART = 0
+NPAR = 4
+ALGO = FAST
+ISPIN = 2 
+NSIM = 4
+ENCUT = $e_cutoff
+IBRION = 2
+NELM = 100
+NELMIN = 3 
+ISIF = 3
+ISMEAR = 1
+MAGMOM = 5 5 
+SIGMA = 0.2
+PREC = Accurate
+LWAVE = .FALSE.
+LREAL = AUTO
+LCHARG = .FALSE.
+LVTOT = .FALSE.
 !
 
 #Initial POSCAR, POTCAR and KPOINTS will be taken from the folder.
@@ -57,18 +57,18 @@ cat >INCAR <<!
 
 #First relaxation will take place.
 #This is the first run of the VASP for structure relaxation.
-echo "FIRST RELAXATION STARTED"
+echo "FIRST RELAXATION STARTED" && touch "qualifiers_started"
 /apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
-echo "FIRST RELAXATION OVER"
+echo "FIRST RELAXATION OVER" && touch "qualifiers_over"
 
 #After the first run, the CONTCAR file will be copied to POSCAR.
 cat CONTCAR > POSCAR
 echo "CONTCAR COPIED TO POSCAR"
 
 #Again the relaxation will be done with new POSCAR.
-echo "VASP SECOND RUN STARTED"
+echo "VASP SECOND RUN STARTED" && touch "semifinals_started"
 /apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
-echo "SECOND RUN OF VASP IS OVER"
+echo "SECOND RUN OF VASP IS OVER" && touch "semifinals_over"
 
 #For getting correct energy values, one more calculation will be done with TETRAHEDRON method (ISMEAR=-5).
 #There won't be any relaxation for this run (IBRION=-1).
@@ -77,11 +77,11 @@ echo "INCAR FILE WILL BE EDITED"
 sed -i "s/ISMEAR.*/ISMEAR = -5/" INCAR
 sed -i "s/IBRION.*/IBRION = -1/" INCAR
 
-echo "STARTING FINAL ENERGY CALCULATION FOR CORRECT ENERGY VALUES"
+echo "STARTING FINAL ENERGY CALCULATION FOR CORRECT ENERGY VALUES" && touch "finals_started"
 /apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
-echo "FINAL ENERGY CALCULATION IS OVER"
+echo "FINAL ENERGY CALCULATION IS OVER" && touch "finals_over"
 
-echo "STARTING E vs V CALCULATIONS"
+echo "STARTING E vs V CALCULATIONS" && touch "EV_started"
 
 #POSCAR will be changed for every new lattice parameter and the values will be used to calculated the energies.
 #These energies will saved in SUMMARY file, which will be later used to plot E vs V graph.
@@ -105,5 +105,5 @@ awk '{print $1","$2","$5}' summary1.csv > summary_EvsV_coarse.csv
 #Plots the E vs. V using gnuplot
 gnuplot plot_coarse.plt
 
-echo "$sys_name : E vs. V \"COARSE\" CALCULATIONS ARE FINISHED"
+echo "$sys_name : E vs. V \"COARSE\" CALCULATIONS ARE FINISHED" && touch "EV_over"
 printf "\n"

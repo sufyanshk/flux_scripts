@@ -38,6 +38,7 @@ e_cutoff=300
 
 #Enter the probable range of lattice parameter. This is from the earlier VASP run.
 #For better accuracy, keep the step size in for loop as 0.01
+touch "fineals_started"
 for i in $(seq 2 0.01 4) 
 do
 	sed -i "1s/.*/$sys_name/" POSCAR
@@ -56,5 +57,5 @@ awk '{print $1","$2","$5}' summary2.csv > summary_EvsV_fine.csv
 #Plots the fine E vs. V using gnuplot
 gnuplot plot_fine.plt
 
-echo "$sys_name : E vs. V \"FINE\" CALCULATION FINISHED"
+echo "$sys_name : E vs. V \"FINE\" CALCULATION FINISHED" && touch "finaels_over"
 printf "\n"
