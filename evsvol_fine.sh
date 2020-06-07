@@ -41,7 +41,6 @@ e_cutoff=300
 touch "fineals_started"
 for i in $(seq 2 0.01 4) 
 do
-	sed -i "1s/.*/$sys_name/" POSCAR
 	sed -i "2s/.*/$i/" POSCAR
 	echo "a= $i"
 	/apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log

@@ -38,11 +38,11 @@ ISPIN = 2
 NSIM = 4
 ENCUT = $e_cutoff
 IBRION = 2
-NELM = 100
+NSW = 100
+NELM = 200
 NELMIN = 3 
 ISIF = 3
 ISMEAR = 1
-MAGMOM = 5 5 
 SIGMA = 0.2
 PREC = Accurate
 LWAVE = .FALSE.
@@ -58,7 +58,7 @@ LVTOT = .FALSE.
 #First relaxation will take place.
 #This is the first run of the VASP for structure relaxation.
 echo "FIRST RELAXATION STARTED" && touch "qualifiers_started"
-/apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
+mpirun -np $n_cores vasp > log
 echo "FIRST RELAXATION OVER" && touch "qualifiers_over"
 
 #After the first run, the CONTCAR file will be copied to POSCAR.
@@ -67,7 +67,7 @@ echo "CONTCAR COPIED TO POSCAR"
 
 #Again the relaxation will be done with new POSCAR.
 echo "VASP SECOND RUN STARTED" && touch "semifinals_started"
-/apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
+mpirun -np $n_cores vasp > log
 echo "SECOND RUN OF VASP IS OVER" && touch "semifinals_over"
 
 #For getting correct energy values, one more calculation will be done with TETRAHEDRON method (ISMEAR=-5).
@@ -81,31 +81,5 @@ sed -i "s/ISIF.*/ISIF\ =\ 2/" INCAR
 sed -i "/NSW.*/d" INCAR
 
 echo "STARTING FINAL ENERGY CALCULATION FOR CORRECT ENERGY VALUES" && touch "finals_started"
-/apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
+mpirun -np $n_cores vasp > log
 echo "FINAL ENERGY CALCULATION IS OVER" && touch "finals_over"
-
-echo "STARTING E vs V CALCULATIONS" && touch "EV_started"
-
-#POSCAR will be changed for every new lattice parameter and the values will be used to calculated the energies.
-#These energies will saved in SUMMARY file, which will be later used to plot E vs V graph.
-
-for i in $(seq 1 1 10) 
-do
-	sed -i "2s/.*/$i/" POSCAR
-	echo "a= $i"
-	/apps/INTEL/INTEL2018_new/compilers_and_libraries_2018.5.274/linux/mpi/intel64/bin/mpirun -np $n_cores -hostfile $PBS_NODEFILE vasp > log
-	
-	#This will write in to file summary.csv file.
-	#The columns will be sepereated with spaces.
-	E=`awk '/F=/ {print $0}' OSZICAR` ; echo $i kp $E >> summary1.csv
-done
-
-#This will seperate the columns by commas and only the 
-#lattice parameter, K-points and Energies will be printed to summary_EvsV_coarse.csv file.
-awk '{print $1","$2","$5}' summary1.csv > summary_EvsV_coarse.csv
-
-#Plots the E vs. V using gnuplot
-gnuplot plot_coarse.plt
-
-echo "$sys_name : E vs. V \"COARSE\" CALCULATIONS ARE FINISHED" && touch "EV_over"
-printf "\n"

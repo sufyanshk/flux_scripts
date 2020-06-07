@@ -29,7 +29,6 @@ n_cores=300
 i=2.9
 
 #POSCAR with precise lattice parameter will be written here.
-sed -i "1s/.*/$sys_name/" POSCAR
 sed -i "2s/.*/$i/" POSCAR
 
 #KPOINTS will be changed and the respective energies will be calculated.
@@ -37,7 +36,7 @@ sed -i "2s/.*/$i/" POSCAR
 touch "kp_over"
 for kp in $(seq 4 1 20)
 do
-	sed -i "4s/.*/$kp $kp $kp/" KPOINTS
+	sed -i "4s/.*/$kp\ $kp\ $kp/" KPOINTS
 
 	echo "a= $i K-points=$kp $kp $kp"
 	
