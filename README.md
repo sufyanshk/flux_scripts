@@ -1,5 +1,5 @@
 # VASP Flux structure relaxation
-(These files are under development for systems which uses `load-leveller` or `job-scheduler`)    
+(These files are under development for systems which uses `load-leveller` or `job-scheduler`. Other interesting repositories can be found on my personal website: <a href="https://sufyanshk.github.io/">sufyanshk.github.io</a>)    
 VASP and Gnuplot should be installed prior to running these scripts.
 MPIRUN is used for parrallel runs of `vasp_std`.
 
